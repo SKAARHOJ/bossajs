@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <fstream>
 #include <iterator>
+#include <thread>
+#include <chrono>
 
 #include "bossajs.h"
 #include "closeworker.h"
@@ -11,7 +13,6 @@
 #include "util.h"
 #include "verifyworker.h"
 #include "writeworker.h"
-#include <unistd.h>
 
 using namespace v8;
 
@@ -39,7 +40,7 @@ void Bossa::connect(std::string portStr) {
   port->close();
 
   // wait for chip to reboot and USB port to re-appear
-  sleep(3);
+  std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
   if (!samba.connect(portFactory.create(portStr))) {
     throw std::runtime_error("No device found on " + portStr);
