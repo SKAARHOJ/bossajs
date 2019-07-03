@@ -191,8 +191,8 @@ NAN_MODULE_INIT(Bossa::Init) {
   Nan::SetPrototypeMethod(ctor, "write", Write);
 
   // Export class
-  target->Set(L("Bossa"), ctor->GetFunction());
-  target->Set(L("default"), ctor->GetFunction());
+  target->Set(L("Bossa"), Nan::GetFunction(ctor));
+  target->Set(L("default"), Nan::GetFunction(ctor));
 }
 
 NAN_METHOD(Bossa::New) {
