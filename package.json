@@ -8,7 +8,11 @@
     "url": "github:sptgps/bossajs"
   },
   "license": "BSD-3-Clause",
-  "os": [ "darwin", "win32", "linux" ],
+  "os": [
+    "darwin",
+    "win32",
+    "linux"
+  ],
   "babel": {
     "presets": [
       [

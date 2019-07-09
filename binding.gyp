@@ -63,8 +63,8 @@
       }],
       ['OS=="linux"', {
         "sources": [
-          "PosixSerialPort.cpp",
-          "LinuxPortFactory.cpp"
+          "extern/bossa/src/PosixSerialPort.cpp",
+          "extern/bossa/src/LinuxPortFactory.cpp"
         ],
         "cflags_cc": [ "-std=c++17" ],
         "cflags_cc!": [ "-fno-exceptions" ]
