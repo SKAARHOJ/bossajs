@@ -55,7 +55,8 @@ void Bossa::connect(std::string portStr) {
   connected = true;
 }
 
-void Bossa::arduinoReset(std::string portStr) {
+void Bossa::reset(std::string portStr) {
+  // Arduinoreset
   if (portStr.empty()) {
     portStr = portFactory.def();
   }

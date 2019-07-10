@@ -5,7 +5,7 @@ using namespace v8;
 
 void ResetWorker::Execute() {
   try {
-    bossa->arduinoReset(port);
+    bossa->reset(port);
   } catch (const std::exception &exc) {
     SetErrorMessage(exc.what());
   }

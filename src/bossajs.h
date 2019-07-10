@@ -36,7 +36,7 @@ public:
 
   // C++ Methods
   void connect(std::string port);
-  void arduinoReset(std::string port);
+  void reset(std::string port);
   void close();
   void info(FlasherInfo &info);
   std::vector<char> read(uint32_t offset, uint32_t size);
