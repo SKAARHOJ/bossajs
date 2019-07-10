@@ -1,8 +1,8 @@
+#include <chrono>
 #include <cstdio>
 #include <fstream>
 #include <iterator>
 #include <thread>
-#include <chrono>
 
 #include "bossajs.h"
 #include "closeworker.h"
@@ -10,6 +10,7 @@
 #include "eraseworker.h"
 #include "infoworker.h"
 #include "readworker.h"
+#include "resetworker.h"
 #include "util.h"
 #include "verifyworker.h"
 #include "writeworker.h"
@@ -52,6 +53,31 @@ void Bossa::connect(std::string portStr) {
   flasher.emplace(samba, *device, observer);
 
   connected = true;
+}
+
+void Bossa::arduinoReset(std::string portStr) {
+  if (portStr.empty()) {
+    portStr = portFactory.def();
+  }
+
+  if (portStr.empty()) {
+    throw std::runtime_error("No serial ports available");
+  }
+  SerialPort::Ptr port;
+
+  port = portFactory.create(portStr);
+
+  printf("Arduino 1200 baud reset\n");
+  if (!port->open(1200)) {
+    throw std::runtime_error("Failed to open port at 1200bps\n");
+  }
+
+  port->setRTS(true);
+  port->setDTR(false);
+  port->close();
+
+  // wait for chip to reboot and USB port to re-appear
+  std::this_thread::sleep_for(std::chrono::milliseconds(20));
 }
 
 void Bossa::close() {
@@ -250,6 +276,32 @@ NAN_METHOD(Bossa::Connect) {
   Nan::Callback *callback = new Nan::Callback(Nan::To<Function>(info[1]).ToLocalChecked());
 
   Nan::AsyncQueueWorker(new ConnectWorker(callback, self, port));
+}
+
+NAN_METHOD(Bossa::Reset) {
+  Bossa *self = Nan::ObjectWrap::Unwrap<Bossa>(info.This());
+  std::string port;
+
+  if (info.Length() != 2) {
+    return Nan::ThrowTypeError("Must provide port and callback");
+  }
+
+  if (!info[0]->IsString()) {
+    return Nan::ThrowTypeError("port must be a string");
+  }
+  Local value = Nan::To<String>(info[0]).ToLocalChecked();
+
+  if (!value->IsNullOrUndefined()) {
+    Nan::Utf8String port_(value);
+    port = std::string(*port_);
+  }
+
+  if (!info[1]->IsFunction()) {
+    return Nan::ThrowTypeError("callback must be a function");
+  }
+  Nan::Callback *callback = new Nan::Callback(Nan::To<Function>(info[1]).ToLocalChecked());
+
+  Nan::AsyncQueueWorker(new ResetWorker(callback, self, port));
 }
 
 NAN_METHOD(Bossa::Close) {

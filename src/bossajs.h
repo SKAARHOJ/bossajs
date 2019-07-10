@@ -7,58 +7,55 @@
 
 #include <nan.h>
 
-#include "Flasher.h"
-#include "Samba.h"
-#include "PortFactory.h"
 #include "Device.h"
+#include "Flasher.h"
+#include "PortFactory.h"
+#include "Samba.h"
 
 #include "observer.h"
 
-
 class NotConnected : public std::runtime_error {
-    public:
-        NotConnected() : std::runtime_error("Not connected") {}
+public:
+  NotConnected() : std::runtime_error("Not connected") {}
 };
 
-
 class Bossa : public Nan::ObjectWrap {
-    private:
-        Samba samba;
-        PortFactory portFactory;
-        std::optional<Device> device;
-        std::optional<Flasher> flasher;
+private:
+  Samba samba;
+  PortFactory portFactory;
+  std::optional<Device> device;
+  std::optional<Flasher> flasher;
 
-        BossaObserver observer;
+  BossaObserver observer;
 
-        bool connected = false;
-    public:
-        Bossa(bool debug)
-            : observer(this)
-        {
-            samba.setDebug(debug);
-        }
-        ~Bossa() {}
+  bool connected = false;
 
-        // C++ Methods
-        void connect(std::string port);
-        void close();
-        void info(FlasherInfo& info);
-        std::vector<char> read(uint32_t offset, uint32_t size);
-        void erase(uint32_t offset);
-        bool verify(Nan::TypedArrayContents<uint8_t>& buffer, uint32_t offset);
-        void write(Nan::TypedArrayContents<uint8_t>& buffer, uint32_t offset);
+public:
+  Bossa(bool debug) : observer(this) { samba.setDebug(debug); }
+  ~Bossa() {}
 
-        // Node methods
-        static NAN_MODULE_INIT(Init);
+  // C++ Methods
+  void connect(std::string port);
+  void arduinoReset(std::string port);
+  void close();
+  void info(FlasherInfo &info);
+  std::vector<char> read(uint32_t offset, uint32_t size);
+  void erase(uint32_t offset);
+  bool verify(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset);
+  void write(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset);
 
-        static NAN_METHOD(New);
-        static NAN_METHOD(Connect);
-        static NAN_METHOD(Close);
-        static NAN_METHOD(Info);
-        static NAN_METHOD(Read);
-        static NAN_METHOD(Erase);
-        static NAN_METHOD(Verify);
-        static NAN_METHOD(Write);
+  // Node methods
+  static NAN_MODULE_INIT(Init);
 
-        static Nan::Persistent<v8::FunctionTemplate> constructor;
+  static NAN_METHOD(New);
+  static NAN_METHOD(Connect);
+  static NAN_METHOD(Reset);
+  static NAN_METHOD(Close);
+  static NAN_METHOD(Info);
+  static NAN_METHOD(Read);
+  static NAN_METHOD(Erase);
+  static NAN_METHOD(Verify);
+  static NAN_METHOD(Write);
+
+  static Nan::Persistent<v8::FunctionTemplate> constructor;
 };
