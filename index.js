@@ -13,6 +13,7 @@ class Bossa extends addon.Bossa {
 
         for (const method of [
             'connect',
+            'reset',
             'close',
             'erase',
             'info',
