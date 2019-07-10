@@ -212,6 +212,7 @@ NAN_MODULE_INIT(Bossa::Init) {
   Nan::SetPrototypeMethod(ctor, "connect", Connect);
   Nan::SetPrototypeMethod(ctor, "close", Close);
   Nan::SetPrototypeMethod(ctor, "erase", Erase);
+  Nan::SetPrototypeMethod(ctor, "reset", Reset);
   Nan::SetPrototypeMethod(ctor, "info", Info);
   Nan::SetPrototypeMethod(ctor, "read", Read);
   Nan::SetPrototypeMethod(ctor, "verify", Verify);
