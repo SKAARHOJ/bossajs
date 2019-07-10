@@ -31,10 +31,13 @@ void Bossa::connect(std::string portStr) {
 
   port = portFactory.create(portStr);
 
-  printf("Arduino 1200 baud reset\n");
-  if (!port->open(1200)) {
-    throw std::runtime_error("Failed to open port at 1200bps\n");
-  }
+  /*
+  // Reset has to be done manually, no need to do it on connect!
+    printf("Arduino 1200 baud reset\n");
+    if (!port->open(1200)) {
+      throw std::runtime_error("Failed to open port at 1200bps\n");
+    }
+     */
 
   port->setRTS(true);
   port->setDTR(false);
