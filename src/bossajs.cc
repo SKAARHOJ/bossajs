@@ -224,7 +224,6 @@ NAN_MODULE_INIT(Bossa::Init) {
   // Export class
   
   Local<Context> context;
-  auto isolate = context->GetIsolate();
   target->Set(L("Bossa"), ctor->GetFunction(context).ToLocalChecked());
   target->Set(L("default"), ctor->GetFunction(context).ToLocalChecked());
 }
