@@ -90,7 +90,7 @@ void Bossa::close() {
   Device::FlashPtr &flash = device->getFlash();
   flash->setBootFlash(true);
   flash->writeOptions();
-  this_thread::sleep_for(std::chrono::milliseconds(1000)); // wait for flash write
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // wait for flash write
 
   device->reset();
 
