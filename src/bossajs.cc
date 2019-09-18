@@ -90,6 +90,7 @@ void Bossa::close() {
   Device::FlashPtr &flash = device->getFlash();
   flash->setBootFlash(true);
   flash->writeOptions();
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // wait for flash write
 
   device->reset();
 
@@ -222,8 +223,10 @@ NAN_MODULE_INIT(Bossa::Init) {
   Nan::SetPrototypeMethod(ctor, "write", Write);
 
   // Export class
-  target->Set(L("Bossa"), ctor->GetFunction());
-  target->Set(L("default"), ctor->GetFunction());
+  
+  Local<Context> context;
+  target->Set(L("Bossa"), ctor->GetFunction(context).ToLocalChecked());
+  target->Set(L("default"), ctor->GetFunction(context).ToLocalChecked());
 }
 
 NAN_METHOD(Bossa::New) {
