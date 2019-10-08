@@ -52,6 +52,7 @@
                 "libraries": [
                     "-lsetupapi"
                 ],
+                "target_arch": "ia32",
                 "msvs_configuration_platform": "win32",
                 "msvs_settings": {
                     "VCCLCompilerTool": {
