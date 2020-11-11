@@ -81,7 +81,7 @@ void Bossa::reset(std::string portStr) {
   port->close();
 
   // wait for chip to reboot and USB port to re-appear
-  std::this_thread::sleep_for(std::chrono::milliseconds(20));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
 void Bossa::close() {
