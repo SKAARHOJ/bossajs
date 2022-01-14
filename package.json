@@ -1,6 +1,6 @@
 {
   "name": "bossajs",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "main": "index.js",
   "author": "Sports Performance Tracking <engineering@sportsperformancetracking.com>",
   "repository": {
@@ -32,7 +32,7 @@
     "test": "mocha --require @babel/register --require @babel/polyfill tests/**/*.spec.js"
   },
   "dependencies": {
-    "nan": "^2.12.1"
+    "nan": "^2.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

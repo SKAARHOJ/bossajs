@@ -225,8 +225,7 @@ NAN_MODULE_INIT(Bossa::Init) {
   // Export class
   
   Local<Context> context;
-  target->Set(L("Bossa"), ctor->GetFunction(context).ToLocalChecked());
-  target->Set(L("default"), ctor->GetFunction(context).ToLocalChecked());
+  Nan::Set(target, Nan::New("Bossa").ToLocalChecked(), Nan::GetFunction(ctor).ToLocalChecked());
 }
 
 NAN_METHOD(Bossa::New) {

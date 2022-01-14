@@ -17,27 +17,27 @@ void InfoWorker::HandleOKCallback() {
     Nan::HandleScope scope;
 
     Local<Object> obj = Nan::New<Object>();
-    obj->Set(L("name"), L(finfo.name));
-    obj->Set(L("chipId"), Nan::New(finfo.chipId));
-    obj->Set(L("extChipId"), Nan::New(finfo.extChipId));
-    obj->Set(L("version"), L(finfo.version));
-    obj->Set(L("address"), Nan::New(finfo.address));
-    obj->Set(L("numPages"), Nan::New(finfo.numPages));
-    obj->Set(L("pageSize"), Nan::New(finfo.pageSize));
-    obj->Set(L("totalSize"), Nan::New(finfo.totalSize));
-    obj->Set(L("numPlanes"), Nan::New(finfo.numPlanes));
+    Nan::Set(obj, L("name"), L(finfo.name));
+    Nan::Set(obj, L("chipId"), Nan::New(finfo.chipId));
+    Nan::Set(obj, L("extChipId"), Nan::New(finfo.extChipId));
+    Nan::Set(obj, L("version"), L(finfo.version));
+    Nan::Set(obj, L("address"), Nan::New(finfo.address));
+    Nan::Set(obj, L("numPages"), Nan::New(finfo.numPages));
+    Nan::Set(obj, L("pageSize"), Nan::New(finfo.pageSize));
+    Nan::Set(obj, L("totalSize"), Nan::New(finfo.totalSize));
+    Nan::Set(obj, L("numPlanes"), Nan::New(finfo.numPlanes));
 
-    obj->Set(L("security"), Nan::New(finfo.security));
-    obj->Set(L("bootFlash"), Nan::New(finfo.bootFlash));
-    obj->Set(L("bod"), Nan::New(finfo.bod));
-    obj->Set(L("bor"), Nan::New(finfo.bor));
+    Nan::Set(obj, L("security"), Nan::New(finfo.security));
+    Nan::Set(obj, L("bootFlash"), Nan::New(finfo.bootFlash));
+    Nan::Set(obj, L("bod"), Nan::New(finfo.bod));
+    Nan::Set(obj, L("bor"), Nan::New(finfo.bor));
 
-    obj->Set(L("canBootFlash"), Nan::New(finfo.canBootFlash));
-    obj->Set(L("canBod"), Nan::New(finfo.canBod));
-    obj->Set(L("canBor"), Nan::New(finfo.canBor));
-    obj->Set(L("canChipErase"), Nan::New(finfo.canChipErase));
-    obj->Set(L("canWriteBuffer"), Nan::New(finfo.canWriteBuffer));
-    obj->Set(L("canChecksumBuffer"), Nan::New(finfo.canChecksumBuffer));
+    Nan::Set(obj, L("canBootFlash"), Nan::New(finfo.canBootFlash));
+    Nan::Set(obj, L("canBod"), Nan::New(finfo.canBod));
+    Nan::Set(obj, L("canBor"), Nan::New(finfo.canBor));
+    Nan::Set(obj, L("canChipErase"), Nan::New(finfo.canChipErase));
+    Nan::Set(obj, L("canWriteBuffer"), Nan::New(finfo.canWriteBuffer));
+    Nan::Set(obj, L("canChecksumBuffer"), Nan::New(finfo.canChecksumBuffer));
 
     Local<Array> lockRegions = Nan::New<Array>(finfo.lockRegions.size());
     unsigned index = 0;
@@ -45,7 +45,7 @@ void InfoWorker::HandleOKCallback() {
         Nan::Set(lockRegions, index, Nan::New(elem));
         index++;
     }
-    obj->Set(L("lockRegions"), lockRegions);
+    Nan::Set(obj, L("lockRegions"), lockRegions);
 
     Local<Value> argv[] = {
         Nan::Null(),  // err
