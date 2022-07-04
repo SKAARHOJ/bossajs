@@ -41,8 +41,8 @@ public:
   void info(FlasherInfo &info);
   std::vector<char> read(uint32_t offset, uint32_t size);
   void erase(uint32_t offset);
-  bool verify(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset);
-  void write(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset);
+  bool verify(std::string filename, uint32_t offset);
+  void write(std::string filename, uint32_t offset);
 
   // Node methods
   static NAN_MODULE_INIT(Init);

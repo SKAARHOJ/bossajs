@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iterator>
 #include <thread>
+#include "./node.h"
 
 #include "bossajs.h"
 #include "closeworker.h"
@@ -141,33 +142,15 @@ Bossa::read(uint32_t offset, uint32_t size) {
   throw std::logic_error("not reached");
 }
 
-bool Bossa::verify(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset) {
-  // FIXME: deprecated
-  const char *filename = std::tmpnam(nullptr);
-
-  // Write the buffer to disk
-  std::ofstream file(filename, std::ios::binary);
-
-  try {
-    file.write(reinterpret_cast<char *>(*buffer), buffer.length());
-    file.close();
-  } catch (...) {
-    file.close();
-    std::remove(filename);
-
-    throw;
-  }
-
+bool Bossa::verify(std::string filename, uint32_t offset) {
   try {
     uint32_t pageErrors;
     uint32_t totalErrors;
 
-    bool result = flasher->verify(filename, pageErrors, totalErrors, offset);
-    std::remove(filename);
+    bool result = flasher->verify(filename.c_str(), pageErrors, totalErrors, offset);
 
     return result;
   } catch (...) {
-    std::remove(filename);
 
     throw;
   }
@@ -175,29 +158,10 @@ bool Bossa::verify(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset) {
   throw std::logic_error("not reached");
 }
 
-void Bossa::write(Nan::TypedArrayContents<uint8_t> &buffer, uint32_t offset) {
-  // FIXME: deprecated
-  const char *filename = std::tmpnam(nullptr);
-
-  // Write the buffer to disk
-  std::ofstream file(filename, std::ios::binary);
-
+void Bossa::write(std::string filename, uint32_t offset) {
   try {
-    file.write(reinterpret_cast<char *>(*buffer), buffer.length());
-    file.close();
+    flasher->write(filename.c_str(), offset);
   } catch (...) {
-    file.close();
-    std::remove(filename);
-
-    throw;
-  }
-
-  try {
-    flasher->write(filename, offset);
-    std::remove(filename);
-  } catch (...) {
-    std::remove(filename);
-
     throw;
   }
 }
@@ -390,10 +354,17 @@ NAN_METHOD(Bossa::Verify) {
     return Nan::ThrowTypeError("must provide buffer, offset and callback");
   }
 
-  if (!info[0]->IsUint8Array()) {
-    return Nan::ThrowTypeError("data must be a Buffer");
+  std::string filename;
+
+  if (!info[0]->IsString()) {
+    return Nan::ThrowTypeError("filename must be a string");
   }
-  Local buffer = Nan::To<Object>(info[0]).ToLocalChecked();
+  Local value = Nan::To<String>(info[0]).ToLocalChecked();
+
+  if (!value->IsNullOrUndefined()) {
+    Nan::Utf8String filename_(value);
+    filename = std::string(*filename_);
+  }
 
   if (!info[1]->IsUint32()) {
     return Nan::ThrowTypeError("offset must be an integer");
@@ -405,7 +376,7 @@ NAN_METHOD(Bossa::Verify) {
   }
   Nan::Callback *callback = new Nan::Callback(Nan::To<Function>(info[2]).ToLocalChecked());
 
-  Nan::AsyncQueueWorker(new VerifyWorker(callback, self, buffer, offset));
+  Nan::AsyncQueueWorker(new VerifyWorker(callback, self, filename, offset));
 }
 
 NAN_METHOD(Bossa::Write) {
@@ -415,10 +386,17 @@ NAN_METHOD(Bossa::Write) {
     return Nan::ThrowTypeError("must provide buffer, offset and callback");
   }
 
-  if (!info[0]->IsUint8Array()) {
-    return Nan::ThrowTypeError("data must be a Buffer");
+  std::string filename;
+
+  if (!info[0]->IsString()) {
+    return Nan::ThrowTypeError("filename must be a string");
   }
-  Local buffer = Nan::To<Object>(info[0]).ToLocalChecked();
+  Local value = Nan::To<String>(info[0]).ToLocalChecked();
+
+  if (!value->IsNullOrUndefined()) {
+    Nan::Utf8String filename_(value);
+    filename = std::string(*filename_);
+  }
 
   if (!info[1]->IsUint32()) {
     return Nan::ThrowTypeError("offset must be an integer");
@@ -430,5 +408,5 @@ NAN_METHOD(Bossa::Write) {
   }
   Nan::Callback *callback = new Nan::Callback(Nan::To<Function>(info[2]).ToLocalChecked());
 
-  Nan::AsyncQueueWorker(new WriteWorker(callback, self, buffer, offset));
+  Nan::AsyncQueueWorker(new WriteWorker(callback, self, filename, offset));
 }
