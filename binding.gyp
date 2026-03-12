@@ -41,13 +41,16 @@
                 ],
                 "xcode_settings": {
                     "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
-                    "OTHER_CFLAGS": ["-std=c++17"]
+                    "OTHER_CFLAGS": ["-std=c++20"]
                 }
             }],
             ['OS=="win"', {
                 "sources": [
                     "extern/bossa/src/WinSerialPort.cpp",
                     "extern/bossa/src/WinPortFactory.cpp"
+                ],
+                "defines": [
+                    "NOMINMAX"
                 ],
                 "libraries": [
                     "-lsetupapi"
@@ -56,7 +59,7 @@
                     "VCCLCompilerTool": {
                         "AdditionalOptions": [
                             "/EHsc",
-                            "/std:c++17"
+                            "/std:c++20"
                         ]
                     }
                 }
@@ -66,7 +69,7 @@
                     "extern/bossa/src/PosixSerialPort.cpp",
                     "extern/bossa/src/LinuxPortFactory.cpp"
                 ],
-                "cflags_cc": ["-std=c++17"],
+                "cflags_cc": ["-std=c++20"],
                 "cflags_cc!": ["-fno-exceptions"]
             }]
         ]
